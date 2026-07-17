@@ -1,18 +1,48 @@
-name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+name: Deploy to AWS Lambda
+
+run-name: "[${{ github.event_name }} - ${{ github.ref }}] Deploying lambda"
+
+permissions:
+  id-token: write   # This is required for OIDC authentication
+  contents: read    # This is required to checkout the repository
+  
 on: [push]
+
 jobs:
-  Explore-GitHub-Actions:
+  deploy:
     runs-on: ubuntu-latest
+    environment: Production
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
       - name: Check out repository code
         uses: actions/checkout@v6
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
+        
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Build source code
+        run: |
+          cd game-query
+          ls
+          npm ci
+          npm run build
+        
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}
+  
+      - name: Deploy Lambda Function
+        uses: aws-actions/aws-lambda-deploy@v1.1.0
+        with:
+          function-name: game-query
+          code-artifacts-dir: ${{ github.workspace }}/game-query/dist
+          handler: index.handler
+          runtime: nodejs24.x
+          
       - run: echo "🍏 This job's status is ${{ job.status }}."
