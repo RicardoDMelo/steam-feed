@@ -1,0 +1,17 @@
+{
+  "name": "game-query",
+  "version": "1.0.0",
+  "license": "ISC",
+  "author": "ricardo.d.melo@hotmail.com",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node ./dist/index.js"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.162",
+    "@types/node": "^26.1.1",
+    "tsx": "^4.23.1",
+    "typescript": "^7.0.2"
+  }
+}
