@@ -30,20 +30,23 @@ jobs:
           cd game-query
           
           echo 'Listing files'
-          ls
           echo '----------------'
+          ls
+          echo ''
           
           echo 'Installing Packages'
-          npm ci
           echo '----------------'
+          npm ci
+          echo ''
           
           echo 'Bulding project'
-          npm run build
           echo '----------------'
+          npm run build
+          echo ''
           
           echo 'Listing dist'
-          ls ./dist
           echo '----------------'
+          ls ./dist
   
       - name: Deploy Lambda Function
         uses: aws-actions/aws-lambda-deploy@v1.1.2
@@ -52,5 +55,6 @@ jobs:
           code-artifacts-dir: ${{ github.workspace }}/game-query/dist
           handler: index.handler
           runtime: nodejs24.x
+          role: ${{ secrets.AWS_LAMBDA_ROLE }}
           
       - run: echo "🍏 This job's status is ${{ job.status }}."
