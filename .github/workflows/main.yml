@@ -1,0 +1,60 @@
+name: Deploy to AWS Lambda
+
+run-name: "[${{ github.event_name }} - ${{ github.ref }}] Deploying lambda"
+
+permissions:
+  id-token: write   # This is required for OIDC authentication
+  contents: read    # This is required to checkout the repository
+  
+on: [push,workflow_dispatch]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v6
+        
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6.1.0
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Build source code
+        run: |
+          cd game-query
+          
+          echo 'Listing files'
+          echo '----------------'
+          ls
+          echo ''
+          
+          echo 'Installing Packages'
+          echo '----------------'
+          npm ci
+          echo ''
+          
+          echo 'Bulding project'
+          echo '----------------'
+          npm run build
+          echo ''
+          
+          echo 'Listing dist'
+          echo '----------------'
+          ls ./dist
+  
+      - name: Deploy Lambda Function
+        uses: aws-actions/aws-lambda-deploy@v1.1.2
+        with:
+          function-name: game-query
+          code-artifacts-dir: ${{ github.workspace }}/game-query/dist
+          handler: index.handler
+          runtime: nodejs24.x
+          role: ${{ secrets.AWS_LAMBDA_ROLE }}
+          
+      - run: echo "🍏 This job's status is ${{ job.status }}."
