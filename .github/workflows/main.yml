@@ -6,7 +6,7 @@ permissions:
   id-token: write   # This is required for OIDC authentication
   contents: read    # This is required to checkout the repository
   
-on: [push]
+on: [push,workflow_dispatch]
 
 jobs:
   deploy:
