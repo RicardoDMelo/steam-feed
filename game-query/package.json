@@ -5,7 +5,7 @@
   "author": "ricardo.d.melo@hotmail.com",
   "type": "module",
   "scripts": {
-    "build": "esbuild src/query.ts src/get.ts --bundle --platform=node --format=esm --target=node24 --outdir=dist --outbase=src",
+    "build": "esbuild src/query.ts src/get.ts --bundle --platform=node --format=cjs --target=node24 --outdir=dist --outbase=src",
     "start": "node ./dist/index.js",
     "dev": "tsx watch src/local-server.ts"
   },
