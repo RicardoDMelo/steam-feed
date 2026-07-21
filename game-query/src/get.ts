@@ -1,6 +1,6 @@
 import type { Context } from 'aws-lambda';
-import type { GameSummary } from '../domain/summary.js';
-import { getGameByAppId } from '../infra/game.repository.js';
+import type { GameSummary } from './domain/summary.js';
+import { getGameByAppId } from './infra/game.repository.js';
 
 type GameGetEvent = {
     id: number;

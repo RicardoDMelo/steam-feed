@@ -1,7 +1,7 @@
 import express from 'express';
 import type { Context } from 'aws-lambda';
 import { handler as queryHandler } from './query.js';
-import { handler as getHandler } from './handlers/get.js';
+import { handler as getHandler } from './get.js';
 
 const app = express();
 app.use(express.json());
