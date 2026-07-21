@@ -5,7 +5,7 @@
   "author": "ricardo.d.melo@hotmail.com",
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "esbuild src/query.ts src/get.ts --bundle --platform=node --format=esm --target=node24 --outdir=dist --outbase=src",
     "start": "node ./dist/index.js",
     "dev": "tsx watch src/local-server.ts"
   },
@@ -13,6 +13,7 @@
     "@types/aws-lambda": "^8.10.162",
     "@types/express": "^5.0.6",
     "@types/node": "^26.1.1",
+    "esbuild": "0.28.1",
     "express": "^5.2.1",
     "tsx": "^4.23.1",
     "typescript": "^7.0.2"
