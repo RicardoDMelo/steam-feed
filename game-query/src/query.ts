@@ -13,7 +13,7 @@ type GameQueryResult = {
     cursor?: string | undefined;
 }
 
-const pageSize = 20;
+const pageSize = 100;
 
 export const handler = async (event: GameQueryEvent, context: Context): Promise<GameQueryResult> => {
     const exclusiveStartKey = decodeCursor(event?.cursor);

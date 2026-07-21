@@ -2,6 +2,7 @@ import express from 'express';
 import type { Context } from 'aws-lambda';
 import { handler as queryHandler } from './query.js';
 import { handler as getHandler } from './get.js';
+import { handler as clearHandler } from './clear.js';
 
 const app = express();
 app.use(express.json());
@@ -35,9 +36,20 @@ app.get('/game-query/:id', async (req, res) => {
 	}
 });
 
+app.delete('/game-query', async (req, res) => {
+	try {
+		const result = await clearHandler({}, fakeContext);
+		res.type('application/json').send(result);
+	} catch (err) {
+		console.error(err);
+		res.status(500).json({ error: 'Internal error' });
+	}
+});
+
 const port = process.env.PORT ?? 3000;
 app.listen(port, () => {
 	console.log(`Local API rodando em http://localhost:${port}`);
 	console.log(`Teste com: curl "http://localhost:${port}/game-query"`);
 	console.log(`Teste com: curl "http://localhost:${port}/game-query/570"`);
+	console.log(`Limpar tabela: curl -X DELETE "http://localhost:${port}/game-query"`);
 });
