@@ -11,6 +11,8 @@ export const handler = async (_event: unknown, _context: Context): Promise<Steam
 
     const games = await getNextSteamSpyPage();
 
+    console.log(`steam-fetch: fetched ${games.length} games from steamspy`);
+
     if (games.length > 0) {
         await writeGames(games);
     }

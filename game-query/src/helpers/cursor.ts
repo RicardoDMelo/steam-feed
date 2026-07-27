@@ -6,7 +6,7 @@ export const decodeCursor = (cursor?: string): Record<string, unknown> | undefin
   try {
     return JSON.parse(Buffer.from(cursor, 'base64').toString('utf-8'));
   } catch (error) {
-    console.error('game-query: failed to decode cursor', { cursor, error });
+    console.error('game-query: failed to decode cursor', { cursor });
     return undefined;
   }
 }

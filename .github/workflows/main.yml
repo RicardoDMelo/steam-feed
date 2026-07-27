@@ -79,6 +79,7 @@ jobs:
           handler: query.handler
           runtime: nodejs24.x
           role: ${{ secrets.AWS_LAMBDA_ROLE }}
+          environment: '{"FAILED_QUERY_TOPIC_ARN":"${{ secrets.FAILED_QUERY_TOPIC_ARN }}"}'
 
       - name: Deploy Lambda Function
         uses: aws-actions/aws-lambda-deploy@v1.1.2

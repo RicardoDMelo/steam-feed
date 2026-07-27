@@ -7,7 +7,7 @@
   "scripts": {
     "build": "esbuild src/query.ts src/get.ts --bundle --platform=node --format=cjs --target=node24 --outdir=dist --outbase=src",
     "start": "node ./dist/index.js",
-    "dev": "tsx watch --inspect src/local-server.ts"
+    "dev": "tsx watch --env-file=.env --inspect src/local-server.ts"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.162",
@@ -19,6 +19,7 @@
     "typescript": "^7.0.2"
   },
   "dependencies": {
+    "@aws-sdk/client-sns": "^3.1095.0",
     "@aws-sdk/lib-dynamodb": "^3.1090.0"
   }
 }
