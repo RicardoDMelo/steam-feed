@@ -97,6 +97,7 @@ jobs:
           code-artifacts-dir: ${{ github.workspace }}/steam-fetch/dist
           handler: fetch.handler
           runtime: nodejs24.x
+          timeout: 120
           role: ${{ secrets.AWS_LAMBDA_ROLE }}
 
       - run: echo "🍏 This job's status is ${{ job.status }}."
