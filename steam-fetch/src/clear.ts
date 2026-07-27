@@ -6,6 +6,7 @@ type GameClearResult = {
 }
 
 export const handler = async (_event: unknown, _context: Context): Promise<GameClearResult> => {
+    console.log('steam-fetch: clear all games from database');
     const deleted = await clearGames();
     return { deleted };
 };

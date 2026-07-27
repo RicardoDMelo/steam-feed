@@ -1,11 +1,11 @@
 {
-  "name": "game-query",
+  "name": "steam-fetch",
   "version": "1.0.0",
   "license": "ISC",
   "author": "ricardo.d.melo@hotmail.com",
   "type": "module",
   "scripts": {
-    "build": "esbuild src/query.ts src/get.ts --bundle --platform=node --format=cjs --target=node24 --outdir=dist --outbase=src",
+    "build": "esbuild src/fetch.ts src/clear.ts --bundle --platform=node --format=cjs --target=node24 --outdir=dist --outbase=src",
     "start": "node ./dist/index.js",
     "dev": "tsx watch --inspect src/local-server.ts"
   },

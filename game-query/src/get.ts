@@ -1,5 +1,5 @@
 import type { Context } from 'aws-lambda';
-import type { GameSummary } from './domain/summary.js';
+import { orderGameSummary, type GameSummary } from './domain/summary.js';
 import { getGameByAppId } from './infra/game.repository.js';
 
 type GameGetEvent = {
@@ -7,5 +7,8 @@ type GameGetEvent = {
 }
 
 export const handler = async (event: GameGetEvent, context: Context): Promise<GameSummary | undefined> => {
-    return getGameByAppId(event.id);
+    console.log('game-query: get request', event);
+
+    const game = await getGameByAppId(event.id);
+    return game ? orderGameSummary(game) : undefined;
 };

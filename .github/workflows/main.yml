@@ -25,29 +25,52 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Build source code
+      - name: Build game-query
         run: |
           cd game-query
-          
+
           echo 'Listing files'
           echo '----------------'
           ls
           echo ''
-          
+
           echo 'Installing Packages'
           echo '----------------'
           npm ci
           echo ''
-          
+
           echo 'Bulding project'
           echo '----------------'
           npm run build
           echo ''
-          
+
           echo 'Listing dist'
           echo '----------------'
           ls ./dist
-  
+
+      - name: Build steam-fetch
+        run: |
+          cd steam-fetch
+
+          echo 'Listing files'
+          echo '----------------'
+          ls
+          echo ''
+
+          echo 'Installing Packages'
+          echo '----------------'
+          npm ci
+          echo ''
+
+          echo 'Bulding project'
+          echo '----------------'
+          npm run build
+          echo ''
+
+          echo 'Listing dist'
+          echo '----------------'
+          ls ./dist
+
       - name: Deploy Lambda Function
         uses: aws-actions/aws-lambda-deploy@v1.1.2
         with:
@@ -56,7 +79,7 @@ jobs:
           handler: query.handler
           runtime: nodejs24.x
           role: ${{ secrets.AWS_LAMBDA_ROLE }}
-  
+
       - name: Deploy Lambda Function
         uses: aws-actions/aws-lambda-deploy@v1.1.2
         with:
@@ -65,5 +88,14 @@ jobs:
           handler: get.handler
           runtime: nodejs24.x
           role: ${{ secrets.AWS_LAMBDA_ROLE }}
-          
+
+      - name: Deploy Lambda Function
+        uses: aws-actions/aws-lambda-deploy@v1.1.2
+        with:
+          function-name: steam-fetch
+          code-artifacts-dir: ${{ github.workspace }}/steam-fetch/dist
+          handler: fetch.handler
+          runtime: nodejs24.x
+          role: ${{ secrets.AWS_LAMBDA_ROLE }}
+
       - run: echo "🍏 This job's status is ${{ job.status }}."

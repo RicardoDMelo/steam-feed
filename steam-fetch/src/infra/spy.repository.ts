@@ -21,6 +21,8 @@ export const getNextSteamSpyPage = async (): Promise<Array<GameSummary>> => {
 	const lastPage = await getSteamSpyLastPage();
 	const page = lastPage + 1;
 
+	console.log('steam-fetch: steamspy request', { page });
+
 	const response = await fetch(`https://steamspy.com/api.php?request=all&page=${page}`);
 	const games = await response.json() as Record<string, SteamSpyGame>;
 
