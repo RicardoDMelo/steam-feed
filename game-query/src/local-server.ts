@@ -1,5 +1,5 @@
 import express from 'express';
-import type { Context } from 'aws-lambda';
+import type { APIGatewayProxyEventV2, Context } from 'aws-lambda';
 import { handler as queryHandler } from './query.js';
 import { handler as getHandler } from './get.js';
 
@@ -12,7 +12,9 @@ const fakeContext = {
 
 app.get('/game-query', async (req, res) => {
 	try {
-		const event = req.query.cursor !== undefined ? { cursor: String(req.query.cursor) } : {};
+		const event = {
+			queryStringParameters: req.query.cursor !== undefined ? { cursor: String(req.query.cursor) } : undefined,
+		} as Partial<APIGatewayProxyEventV2>;
 		const result = await queryHandler(event, fakeContext);
 		res.type('application/json').send(result);
 	} catch (err) {
@@ -23,7 +25,10 @@ app.get('/game-query', async (req, res) => {
 
 app.get('/game-query/:id', async (req, res) => {
 	try {
-		const result = await getHandler({ id: Number(req.params.id) }, fakeContext);
+		const event = {
+			pathParameters: { id: req.params.id },
+		} as Partial<APIGatewayProxyEventV2>;
+		const result = await getHandler(event, fakeContext);
 		if (!result) {
 			res.status(404).json({ error: 'Not found' });
 			return;
