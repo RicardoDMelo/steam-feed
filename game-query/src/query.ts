@@ -34,7 +34,11 @@ export const handler = async (event: Partial<APIGatewayProxyEventV2>, _context: 
 
     const dbResult = await getGames(exclusiveStartKey, pageSize);
 
+
     if (dbResult.items.length > 0) {
+        if (!dbResult.lastEvaluatedKey) {
+            await sendFailedQueryEvent(event);
+        }
         return { count: dbResult.items.length, cursor: dbResult.lastEvaluatedKey ? encodeCursor(dbResult.lastEvaluatedKey) : event?.queryStringParameters?.cursor, items: dbResult.items.map(orderGameSummary) };
     }
 
