@@ -78,6 +78,7 @@ jobs:
           code-artifacts-dir: ${{ github.workspace }}/game-query/dist
           handler: query.handler
           runtime: nodejs24.x
+          timeout: 10
           role: ${{ secrets.AWS_LAMBDA_ROLE }}
           environment: '{"FAILED_QUERY_TOPIC_ARN":"${{ secrets.FAILED_QUERY_TOPIC_ARN }}"}'
 
