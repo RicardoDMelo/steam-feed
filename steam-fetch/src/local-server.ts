@@ -30,7 +30,7 @@ app.delete('/steam-fetch', async (req, res) => {
 	}
 });
 
-const port = process.env.PORT ?? 3000;
+const port = process.env.PORT ?? 3001;
 app.listen(port, () => {
 	console.log(`Local API rodando em http://localhost:${port}`);
 	console.log(`Teste com: curl -X POST "http://localhost:${port}/steam-fetch"`);

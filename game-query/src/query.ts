@@ -46,7 +46,7 @@ export const handler = async (event: Partial<APIGatewayProxyEventV2>, _context: 
     const fallbackItems = fallbackGames.slice(startIndex, startIndex + pageSize);
 
     const nextGame = fallbackGames[startIndex + pageSize];
-    const cursor = nextGame ? encodeCursor({ appId: nextGame.appId, owners: nextGame.owners, dateAdded: getCurrentDate() }) : undefined;
+    const cursor = nextGame ? encodeCursor({ appId: nextGame.appId, owners: nextGame.owners, dateAdded: nextGame.dateAdded }) : undefined;
 
     return { count: fallbackItems.length, cursor, items: fallbackItems.map(orderGameSummary) };
 };

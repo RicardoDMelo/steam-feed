@@ -57,4 +57,4 @@ Limpa todos os itens da tabela `games` (scan + delete em lote).
 ## Variáveis de ambiente
 
 - `AWS_REGION` — região do DynamoDB (default: `sa-east-1`)
-- `PORT` — porta do servidor local (default: `3000`)
+- `PORT` — porta do servidor local (default: `3001`)
