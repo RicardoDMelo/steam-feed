@@ -1,6 +1,6 @@
 # game-query
 
-Serviço serverless (AWS Lambda) que **consulta** dados de jogos da Steam persistidos em uma tabela DynamoDB chamada `games`. Não faz nenhuma chamada ao SteamSpy nem escreve na tabela — ingestão e limpeza são responsabilidade do serviço irmão [`steam-fetch`](../steam-fetch/CLAUDE.md).
+Serviço serverless (AWS Lambda) que **consulta** dados de jogos da Steam persistidos em uma tabela DynamoDB chamada `games`. Não escreve na tabela — ingestão e limpeza são responsabilidade do serviço irmão [`steam-fetch`](../steam-fetch/CLAUDE.md). A listagem (`GET /game-query`) faz uma exceção de leitura ao SteamSpy: se a tabela não tiver jogos para o dia, busca uma página diretamente do SteamSpy como fallback (sem persistir o resultado).
 
 ## Stack
 
@@ -21,6 +21,7 @@ Serviço serverless (AWS Lambda) que **consulta** dados de jogos da Steam persis
 - `src/local-server.ts` — wrapper Express que expõe os handlers como rotas HTTP para dev local
 - `src/domain/summary.ts` — tipo `GameSummary` (modelo principal de jogo)
 - `src/infra/game.repository.ts` — acesso de leitura ao DynamoDB (tabela `games`): listar por dia, buscar por id
+- `src/infra/spy.repository.ts` — fallback de leitura direto no SteamSpy (`request=all`), usado por `query.ts` quando a tabela não tem jogos para o dia; não persiste nada
 - `src/helpers/cursor.ts` — encode/decode do cursor de paginação (base64 da `LastEvaluatedKey` do DynamoDB)
 - `src/helpers/date.ts` — data atual no formato `YYYY-MM-DD`, usada como chave de partição
 
@@ -48,7 +49,7 @@ Existe um item sentinela reservado (`appId = -1`) na mesma tabela, usado por `st
 
 ### `GET /game-query`
 Handler: `src/query.ts`
-Lista jogos do dia atual (dateAdded), paginado.
+Lista jogos do dia atual (dateAdded), paginado. Se a tabela não retornar nenhum jogo para o dia, busca a primeira página do SteamSpy (`request=all`) como fallback e retorna esses jogos sem cursor (sem persistir na tabela).
 - Query param `cursor` (opcional): cursor de paginação em base64.
 - Resposta: `{ count: number, items: GameSummary[], cursor?: string }`
 
