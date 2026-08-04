@@ -20,7 +20,6 @@ const typeDefs = gql`
     appId: Int!
     review: String!
     language: String!
-    dateAdded: String!
     votesUp: Int!
   }
 
