@@ -3,6 +3,7 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist",
+    "allowJs": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "target": "ES2022",

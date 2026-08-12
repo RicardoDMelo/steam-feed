@@ -1,0 +1,23 @@
+extend schema
+  @link(
+    url: "https://specs.apollo.dev/federation/v2.0"
+    import: ["@key", "@shareable"]
+  )
+
+type Query {
+  gameReviews(appId: Int!, language: String): [GameReview!]!
+}
+
+type GameReview {
+  recommendationId: Int!
+  appId: Int!
+  review: String!
+  language: String!
+  votesUp: Int!
+}
+
+type GameSummary
+  @key(fields: "appId") {
+  appId: Int!
+  reviews: [GameReview]
+}

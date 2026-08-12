@@ -1,0 +1,22 @@
+extend schema
+  @link(
+    url: "https://specs.apollo.dev/federation/v2.0"
+    import: ["@key", "@shareable"]
+  )
+
+type Query {
+  gameNews(appId: Int!): [GameNews!]!
+}
+
+type GameNews {
+  newsId: String!
+  appId: Int!
+  title: String!
+  url: String!
+}
+
+type GameSummary
+  @key(fields: "appId") {
+  appId: Int!
+  news: [GameNews]
+}

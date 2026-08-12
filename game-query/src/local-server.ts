@@ -1,48 +1,7 @@
-import express from 'express';
-import type { APIGatewayProxyEventV2, Context } from 'aws-lambda';
-import { handler as queryHandler } from './query.js';
-import { handler as getHandler } from './get.js';
+import { startStandaloneServer } from '@apollo/server/standalone';
+import { server } from './graph.js';
 
-const app = express();
-app.use(express.json());
+const port = Number(process.env.PORT ?? 3000);
 
-const fakeContext = {
-	logGroupName: '/local/game-query',
-} as Context;
-
-app.get('/game-query', async (req, res) => {
-	try {
-		const event = {
-			queryStringParameters: req.query.cursor !== undefined ? { cursor: String(req.query.cursor) } : undefined,
-		} as Partial<APIGatewayProxyEventV2>;
-		const result = await queryHandler(event, fakeContext);
-		res.type('application/json').send(result);
-	} catch (err) {
-		console.error(err);
-		res.status(500).json({ error: 'Internal error' });
-	}
-});
-
-app.get('/game-query/:id', async (req, res) => {
-	try {
-		const event = {
-			pathParameters: { id: req.params.id },
-		} as Partial<APIGatewayProxyEventV2>;
-		const result = await getHandler(event, fakeContext);
-		if (!result) {
-			res.status(404).json({ error: 'Not found' });
-			return;
-		}
-		res.type('application/json').send(result);
-	} catch (err) {
-		console.error(err);
-		res.status(500).json({ error: 'Internal error' });
-	}
-});
-
-const port = process.env.PORT ?? 3000;
-app.listen(port, () => {
-	console.log(`Local API rodando em http://localhost:${port}`);
-	console.log(`Teste com: curl "http://localhost:${port}/game-query"`);
-	console.log(`Teste com: curl "http://localhost:${port}/game-query/570"`);
-});
+const { url } = await startStandaloneServer(server, { listen: { port } });
+console.log(`Supergraph rodando em ${url}`);

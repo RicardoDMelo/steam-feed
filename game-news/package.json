@@ -1,11 +1,11 @@
 {
-  "name": "game-review",
+  "name": "game-news",
   "version": "1.0.0",
   "license": "ISC",
   "author": "ricardo.d.melo@hotmail.com",
   "type": "module",
   "scripts": {
-    "build": "esbuild src/index.ts --bundle --platform=node --format=cjs --target=node24 --outdir=dist --outbase=src",
+    "build": "esbuild src/index.ts src/schema.graphql --bundle --platform=node --format=cjs --target=node24 --outdir=dist --outbase=src --loader:.graphql=copy",
     "start": "node ./dist/index.js",
     "dev": "tsx watch --env-file=.env --inspect src/local-server.ts"
   },

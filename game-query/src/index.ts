@@ -2,6 +2,6 @@ import { handlers, startServerAndCreateLambdaHandler } from '@as-integrations/aw
 import { server } from './graph.js';
 
 export const handler = startServerAndCreateLambdaHandler(
-  server,
+  server as any,
   handlers.createAPIGatewayProxyEventV2RequestHandler()
 );

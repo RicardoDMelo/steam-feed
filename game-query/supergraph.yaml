@@ -1,0 +1,14 @@
+federation_version: =2.3.2
+subgraphs:
+  summary:
+    routing_url: https://7ub1g1q46l.execute-api.sa-east-1.amazonaws.com/subgraphs/game-summary
+    schema:
+      file: ../game-summary/src/schema.graphql
+  review:
+    routing_url: https://7ub1g1q46l.execute-api.sa-east-1.amazonaws.com/subgraphs/game-review
+    schema:
+      file: ../game-review/src/schema.graphql
+  news:
+    routing_url: https://7ub1g1q46l.execute-api.sa-east-1.amazonaws.com/subgraphs/game-news
+    schema:
+      file: ../game-news/src/schema.graphql

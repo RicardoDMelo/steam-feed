@@ -94,6 +94,29 @@ jobs:
           echo '----------------'
           ls ./dist
 
+      - name: Build game-query
+        run: |
+          cd game-query
+
+          echo 'Listing files'
+          echo '----------------'
+          ls
+          echo ''
+
+          echo 'Installing Packages'
+          echo '----------------'
+          npm ci
+          echo ''
+
+          echo 'Bulding project'
+          echo '----------------'
+          npm run build
+          echo ''
+
+          echo 'Listing dist'
+          echo '----------------'
+          ls ./dist
+
       - name: Build steam-fetch
         run: |
           cd steam-fetch
@@ -143,6 +166,16 @@ jobs:
         with:
           function-name: game-news
           code-artifacts-dir: ${{ github.workspace }}/game-news/dist
+          handler: index.handler
+          runtime: nodejs24.x
+          timeout: 10
+          role: ${{ secrets.AWS_LAMBDA_ROLE }}
+
+      - name: Deploy Lambda Function Query
+        uses: aws-actions/aws-lambda-deploy@v1.1.2
+        with:
+          function-name: game-query
+          code-artifacts-dir: ${{ github.workspace }}/game-query/dist
           handler: index.handler
           runtime: nodejs24.x
           timeout: 10
