@@ -1,64 +1,41 @@
 # game-query
 
-Serviço serverless (AWS Lambda) que **consulta** dados de jogos da Steam persistidos em uma tabela DynamoDB chamada `games`. Não escreve na tabela — ingestão e limpeza são responsabilidade do serviço irmão [`steam-fetch`](../steam-fetch/CLAUDE.md). A listagem (`GET /game-query`) faz uma exceção de leitura ao SteamSpy: se a tabela não tiver jogos para o dia, busca uma página diretamente do SteamSpy como fallback (sem persistir o resultado).
+O **router** do supergraph GraphQL (Apollo Federation) — não tem lógica de domínio própria. É o único ponto de entrada GraphQL para clientes: recebe uma query, consulta o SDL do supergraph composto e roteia cada campo para o subgraph que o possui ([`game-summary`](../game-summary/CLAUDE.md), [`game-news`](../game-news/CLAUDE.md), [`game-review`](../game-review/CLAUDE.md)).
 
 ## Stack
 
 - TypeScript, compilado com `esbuild` (bundle CJS, target `node24`)
-- Runtime: AWS Lambda (`@types/aws-lambda`)
-- Banco: DynamoDB (`@aws-sdk/lib-dynamodb`)
-- Servidor local de desenvolvimento com Express (`src/local-server.ts`)
+- Runtime: AWS Lambda (`@types/aws-lambda`, `@as-integrations/aws-lambda`)
+- GraphQL: Apollo Server + `@apollo/gateway` (federation runtime)
+- Composição de schema: [Rover](https://www.apollographql.com/docs/rover/) (`@apollo/rover`)
+- Servidor local de desenvolvimento com Apollo standalone (`src/local-server.ts`)
 
 ## Scripts
 
-- `npm run build` — gera os bundles dos 2 handlers (`query`, `get`) em `dist/`
-- `npm run dev` — sobe o servidor Express local com `tsx watch` (hot reload)
+- `npm run build` — gera o bundle do handler (`src/index.ts`) e copia `src/schema.graphql` para `dist/`
+- `npm run dev` — sobe o servidor Apollo standalone local com `tsx watch` (hot reload)
 - `npm run start` — roda `dist/index.js` (produção)
+- `npm run supergraph` — `rover supergraph compose --config ./supergraph.yaml --output src/schema.graphql`; recompõe o SDL do supergraph a partir dos schemas dos 3 subgraphs. Rodar sempre que um subgraph mudar seu `schema.graphql`.
 
 ## Estrutura
 
-- `src/query.ts`, `src/get.ts` — handlers Lambda (um arquivo por endpoint)
-- `src/local-server.ts` — wrapper Express que expõe os handlers como rotas HTTP para dev local
-- `src/domain/summary.ts` — tipo `GameSummary` (modelo principal de jogo)
-- `src/infra/game.repository.ts` — acesso de leitura ao DynamoDB (tabela `games`): listar por dia, buscar por id
-- `src/infra/spy.repository.ts` — fallback de leitura direto no SteamSpy (`request=all`), usado por `query.ts` quando a tabela não tem jogos para o dia; não persiste nada
-- `src/helpers/cursor.ts` — encode/decode do cursor de paginação (base64 da `LastEvaluatedKey` do DynamoDB)
-- `src/helpers/date.ts` — data atual no formato `YYYY-MM-DD`, usada como chave de partição
+- `supergraph.yaml` — declara os subgraphs (`summary`, `news`, `review`), cada um com sua `routing_url` (API Gateway) e o caminho do respectivo `schema.graphql` local, usado só para composição
+- `src/schema.graphql` — SDL do supergraph **gerado** pelo Rover (não editar à mão; rodar `npm run supergraph`). Carregado em runtime pelo `ApolloGateway`
+- `src/graph.ts` — instancia `ApolloGateway` a partir do `schema.graphql` e o `ApolloServer` (sem resolvers próprios)
+- `src/index.ts` — handler Lambda (wrap do Apollo Server via `@as-integrations/aws-lambda`)
+- `src/local-server.ts` — wrapper Apollo standalone para dev local
 
-## Modelo de dados
+## Federation
 
-Tabela DynamoDB `games` (compartilhada com `steam-fetch`), chave primária composta `appId` (partition) + `dateAdded` (sort), com um GSI `dateAddedKey` (partition `dateAdded`) usado para listar jogos por dia de ingestão, ordenado por `owners` (mais possuído primeiro).
+`game-query` não define nenhum tipo ou resolver — todo o schema exposto vem da composição dos subgraphs. A entidade `GameSummary` (chave `appId`) é resolvida combinando:
+- `game-summary` (dono): `name`, `developer`, `publisher`, `positive`, `negative`, `owners`, `dateAdded`
+- `game-news` (extensão): `news`
+- `game-review` (extensão): `reviews`
 
-`GameSummary`:
-```ts
-{
-  appId: number;
-  name: string;
-  developer: string;
-  publisher: string;
-  positive: number;
-  negative: number;
-  owners: number;
-  dateAdded: string; // YYYY-MM-DD
-}
-```
+Query raiz exposta: `gameSummaries(cursor: String)`, `gameSummary(appId: Int!)`, `gameNews(appId: Int!)`, `gameReviews(appId: Int!, language: String)`.
 
-Existe um item sentinela reservado (`appId = -1`) na mesma tabela, usado por `steam-fetch` para guardar o cursor de paginação da ingestão do SteamSpy (`lastPage`). `game-query` não lê nem escreve esse item diretamente.
-
-## Endpoints (rotas locais via `src/local-server.ts`)
-
-### `GET /game-query`
-Handler: `src/query.ts`
-Lista jogos do dia atual (dateAdded), paginado. Se a tabela não retornar nenhum jogo para o dia, busca a primeira página do SteamSpy (`request=all`) como fallback e retorna esses jogos sem cursor (sem persistir na tabela).
-- Query param `cursor` (opcional): cursor de paginação em base64.
-- Resposta: `{ count: number, items: GameSummary[], cursor?: string }`
-
-### `GET /game-query/:id`
-Handler: `src/get.ts`
-Busca um jogo específico pelo `appId` (id da Steam), para a data atual.
-- Resposta: `GameSummary` ou `404` se não encontrado.
+Para atualizar o supergraph depois de mudar um subgraph: editar o `schema.graphql` do subgraph correspondente, rodar `npm run supergraph` aqui, e commitar o novo `src/schema.graphql`.
 
 ## Variáveis de ambiente
 
-- `AWS_REGION` — região do DynamoDB (default: `sa-east-1`)
 - `PORT` — porta do servidor local (default: `3000`)
