@@ -6,7 +6,6 @@
   "type": "module",
   "scripts": {
     "build": "esbuild src/fetch.ts --bundle --platform=node --format=cjs --target=node24 --outdir=dist --outbase=src --external:@aws-sdk/* --external:@smithy/*",
-    "start": "node ./dist/index.js",
     "dev": "tsx watch --inspect src/local-server.ts"
   },
   "devDependencies": {

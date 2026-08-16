@@ -14,7 +14,6 @@ O **router** do supergraph GraphQL (Apollo Federation) — não tem lógica de d
 
 - `npm run build` — gera o bundle do handler (`src/index.ts`) e copia `src/schema.graphql` para `dist/`
 - `npm run dev` — sobe o servidor Apollo standalone local com `tsx watch` (hot reload)
-- `npm run start` — roda `dist/index.js` (produção)
 - `npm run supergraph` — `rover supergraph compose --config ./supergraph.yaml --output src/schema.graphql`; recompõe o SDL do supergraph a partir dos schemas dos 3 subgraphs. Rodar sempre que um subgraph mudar seu `schema.graphql`.
 
 ## Estrutura

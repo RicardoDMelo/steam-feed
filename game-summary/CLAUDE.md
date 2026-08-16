@@ -15,7 +15,6 @@ Subgraph GraphQL (Apollo Federation) dono da entidade `GameSummary` — os dados
 
 - `npm run build` — gera o bundle do handler (`src/index.ts`) e copia `src/schema.graphql` para `dist/`
 - `npm run dev` — sobe o servidor Apollo standalone local com `tsx watch` (hot reload)
-- `npm run start` — roda `dist/index.js` (produção)
 
 ## Estrutura
 

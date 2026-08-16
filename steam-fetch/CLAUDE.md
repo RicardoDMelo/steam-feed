@@ -13,7 +13,6 @@ Serviço serverless (AWS Lambda) que **ingere** dados de jogos da Steam via [Ste
 
 - `npm run build` — gera os bundles dos 2 handlers (`fetch`, `clear`) em `dist/`
 - `npm run dev` — sobe o servidor Express local com `tsx watch` (hot reload)
-- `npm run start` — roda `dist/index.js` (produção)
 
 ## Estrutura
 

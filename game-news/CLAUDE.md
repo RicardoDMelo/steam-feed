@@ -13,7 +13,6 @@ Subgraph GraphQL (Apollo Federation) que **consulta notícias** de jogos direto 
 
 - `npm run build` — gera o bundle do handler (`src/index.ts`) em `dist/`
 - `npm run dev` — sobe o servidor Apollo standalone local com `tsx watch` (hot reload)
-- `npm run start` — roda `dist/index.js` (produção)
 
 ## Estrutura
 

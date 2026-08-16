@@ -162,7 +162,7 @@ jobs:
           timeout: 10
           memory-size: 256
           role: ${{ secrets.AWS_LAMBDA_ROLE }}
-          environment: '{"FAILED_QUERY_TOPIC_ARN":"${{ secrets.FAILED_QUERY_TOPIC_ARN }}","AWS_LAMBDA_EXEC_WRAPPER":"/opt/otel-instrument","OTEL_NODE_ENABLED_INSTRUMENTATIONS":"aws-sdk,aws-lambda,http,undici","OTEL_PROPAGATORS":"xray,tracecontext,baggage"}'
+          environment: '{"FAILED_QUERY_TOPIC_ARN":"${{ secrets.FAILED_QUERY_TOPIC_ARN }}","AWS_LAMBDA_EXEC_WRAPPER":"/opt/otel-instrument","OTEL_NODE_ENABLED_INSTRUMENTATIONS":"aws-sdk,aws-lambda,http,undici","OTEL_PROPAGATORS":"xray-lambda,tracecontext,baggage"}'
           layers: '["arn:aws:lambda:${{ vars.AWS_REGION }}:615299751070:layer:AWSOpenTelemetryDistroJs:15"]'
           tracing-config: '{"Mode":"Active"}'
 
@@ -176,7 +176,7 @@ jobs:
           timeout: 10
           memory-size: 256
           role: ${{ secrets.AWS_LAMBDA_ROLE }}
-          environment: '{"AWS_LAMBDA_EXEC_WRAPPER":"/opt/otel-instrument","OTEL_NODE_ENABLED_INSTRUMENTATIONS":"aws-sdk,aws-lambda,http,undici","OTEL_PROPAGATORS":"xray,tracecontext,baggage"}'
+          environment: '{"AWS_LAMBDA_EXEC_WRAPPER":"/opt/otel-instrument","OTEL_NODE_ENABLED_INSTRUMENTATIONS":"aws-sdk,aws-lambda,http,undici","OTEL_PROPAGATORS":"xray-lambda,tracecontext,baggage"}'
           layers: '["arn:aws:lambda:${{ vars.AWS_REGION }}:615299751070:layer:AWSOpenTelemetryDistroJs:15"]'
           tracing-config: '{"Mode":"Active"}'
 
@@ -190,7 +190,7 @@ jobs:
           timeout: 10
           memory-size: 256
           role: ${{ secrets.AWS_LAMBDA_ROLE }}
-          environment: '{"AWS_LAMBDA_EXEC_WRAPPER":"/opt/otel-instrument","OTEL_NODE_ENABLED_INSTRUMENTATIONS":"aws-sdk,aws-lambda,http,undici","OTEL_PROPAGATORS":"xray,tracecontext,baggage"}'
+          environment: '{"AWS_LAMBDA_EXEC_WRAPPER":"/opt/otel-instrument","OTEL_NODE_ENABLED_INSTRUMENTATIONS":"aws-sdk,aws-lambda,http,undici","OTEL_PROPAGATORS":"xray-lambda,tracecontext,baggage"}'
           layers: '["arn:aws:lambda:${{ vars.AWS_REGION }}:615299751070:layer:AWSOpenTelemetryDistroJs:15"]'
           tracing-config: '{"Mode":"Active"}'
 
@@ -204,7 +204,7 @@ jobs:
           timeout: 10
           memory-size: 256
           role: ${{ secrets.AWS_LAMBDA_ROLE }}
-          environment: '{"AWS_LAMBDA_EXEC_WRAPPER":"/opt/otel-instrument","OTEL_NODE_ENABLED_INSTRUMENTATIONS":"aws-sdk,aws-lambda,http,undici","OTEL_PROPAGATORS":"xray,tracecontext,baggage"}'
+          environment: '{"AWS_LAMBDA_EXEC_WRAPPER":"/opt/otel-instrument","OTEL_NODE_ENABLED_INSTRUMENTATIONS":"aws-sdk,aws-lambda,http,undici","OTEL_PROPAGATORS":"xray-lambda,tracecontext,baggage"}'
           layers: '["arn:aws:lambda:${{ vars.AWS_REGION }}:615299751070:layer:AWSOpenTelemetryDistroJs:15"]'
           tracing-config: '{"Mode":"Active"}'
 
@@ -218,7 +218,7 @@ jobs:
           timeout: 120
           memory-size: 256
           role: ${{ secrets.AWS_LAMBDA_ROLE }}
-          environment: '{"AWS_LAMBDA_EXEC_WRAPPER":"/opt/otel-instrument","OTEL_NODE_ENABLED_INSTRUMENTATIONS":"aws-sdk,aws-lambda,http,undici","OTEL_PROPAGATORS":"xray,tracecontext,baggage"}'
+          environment: '{"AWS_LAMBDA_EXEC_WRAPPER":"/opt/otel-instrument","OTEL_NODE_ENABLED_INSTRUMENTATIONS":"aws-sdk,aws-lambda,http,undici","OTEL_PROPAGATORS":"xray-lambda,tracecontext,baggage"}'
           layers: '["arn:aws:lambda:${{ vars.AWS_REGION }}:615299751070:layer:AWSOpenTelemetryDistroJs:15"]'
           tracing-config: '{"Mode":"Active"}'
 
