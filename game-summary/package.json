@@ -5,7 +5,7 @@
   "author": "ricardo.d.melo@hotmail.com",
   "type": "module",
   "scripts": {
-    "build": "esbuild src/index.ts src/schema.graphql --bundle --platform=node --format=cjs --target=node24 --outdir=dist --outbase=src --loader:.graphql=copy",
+    "build": "esbuild src/index.ts src/schema.graphql --bundle --platform=node --format=cjs --target=node24 --outdir=dist --outbase=src --loader:.graphql=copy --external:@aws-sdk/* --external:@smithy/*",
     "start": "node ./dist/index.js",
     "dev": "tsx watch --env-file=.env --inspect src/local-server.ts"
   },
