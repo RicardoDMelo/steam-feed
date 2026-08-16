@@ -220,6 +220,6 @@ jobs:
           role: ${{ secrets.AWS_LAMBDA_ROLE }}
           environment: '{"AWS_LAMBDA_EXEC_WRAPPER":"/opt/otel-instrument","OTEL_NODE_ENABLED_INSTRUMENTATIONS":"aws-sdk,aws-lambda,http,undici","OTEL_PROPAGATORS":"xray-lambda,tracecontext,baggage"}'
           layers: '["arn:aws:lambda:${{ vars.AWS_REGION }}:615299751070:layer:AWSOpenTelemetryDistroJs:15"]'
-          tracing-config: '{"Mode":"Active"}'
+          tracing-config: '{"Mode":"PassThrough"}'
 
       - run: echo "🍏 This job's status is ${{ job.status }}."
