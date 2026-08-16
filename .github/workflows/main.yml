@@ -206,7 +206,7 @@ jobs:
           role: ${{ secrets.AWS_LAMBDA_ROLE }}
           environment: '{"AWS_LAMBDA_EXEC_WRAPPER":"/opt/otel-instrument","OTEL_NODE_ENABLED_INSTRUMENTATIONS":"aws-sdk,aws-lambda,http,undici","OTEL_PROPAGATORS":"xray-lambda,tracecontext,baggage"}'
           layers: '["arn:aws:lambda:${{ vars.AWS_REGION }}:615299751070:layer:AWSOpenTelemetryDistroJs:15"]'
-          tracing-config: '{"Mode":"PassThrough"}'
+          tracing-config: '{"Mode":"Active"}'
 
       - name: Deploy Lambda Function Steam Fetch
         uses: aws-actions/aws-lambda-deploy@v1.1.2
@@ -220,6 +220,6 @@ jobs:
           role: ${{ secrets.AWS_LAMBDA_ROLE }}
           environment: '{"AWS_LAMBDA_EXEC_WRAPPER":"/opt/otel-instrument","OTEL_NODE_ENABLED_INSTRUMENTATIONS":"aws-sdk,aws-lambda,http,undici","OTEL_PROPAGATORS":"xray-lambda,tracecontext,baggage"}'
           layers: '["arn:aws:lambda:${{ vars.AWS_REGION }}:615299751070:layer:AWSOpenTelemetryDistroJs:15"]'
-          tracing-config: '{"Mode":"PassThrough"}'
+          tracing-config: '{"Mode":"Active"}'
 
       - run: echo "🍏 This job's status is ${{ job.status }}."
